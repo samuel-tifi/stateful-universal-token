@@ -46,6 +46,7 @@ interface ISUT {
      * @dev Emitted when state is changed for single type of token
      */
     event ChangeStateSingle(
+        address indexed operator,
         address indexed account,
         uint256 id,
         uint256 value,
@@ -57,11 +58,12 @@ interface ISUT {
      * @dev Emitted when states are changed for muliple types of tokens
      */
     event ChangeStateBatch(
-        address indexed account,
+        address indexed operator,
+        address[] indexed accounts,
         uint256[] ids,
         uint256[] values,
-        uint256 oldStates,
-        uint256 newStates
+        uint256[] oldStates,
+        uint256[] newStates
     );
 
     /**
@@ -152,7 +154,8 @@ interface ISUT {
     ) external;
 
     /**
-     * @dev Change a single type `id` of token to the specific `state` owned by `msg.sender`.
+     * @dev Change a single type `id` of token from `stateFrom` to the specific `stateTo`
+     * owned by `account`.
      *
      * Emits a {ChangeStateSingle} event.
      *
@@ -161,8 +164,10 @@ interface ISUT {
      * - `msg.sender` must have at least `amount` of tokens of the type `id` in `state`.
      */
     function changeState(
+        address account,
         uint256 id,
-        uint256 state,
+        uint256 stateFrom,
+        uint256 stateTo,
         uint256 amount
     ) external;
 
@@ -175,8 +180,10 @@ interface ISUT {
      * - `ids`, `states` and `amounts` must have the same length.
      */
     function batchChangeStates(
+        address[] calldata accounts,
         uint256[] calldata ids,
-        uint256[] calldata states,
+        uint256[] calldata statesFrom,
+        uint256[] calldata statesTo,
         uint256[] calldata amounts
     ) external;
 
